@@ -184,13 +184,15 @@ char SFE_BMP180::readBytes(unsigned char *values, char length)
 	_error = Wire.endTransmission();
 	if (_error == 0)
 	{
-		Wire.requestFrom(BMP180_ADDR,length);
-		while(Wire.available() != length) ; // wait until bytes are ready
-		for(x=0;x<length;x++)
-		{
-			values[x] = Wire.read();
+		size_t _req =  Wire.requestFrom(BMP180_ADDR,length);
+		if (_req != 0) {
+			while(Wire.available() != length) ; // wait until bytes are ready
+			for(x=0;x<length;x++)
+			{
+				values[x] = Wire.read();
+			}
+			return(1);
 		}
-		return(1);
 	}
 	return(0);
 }
